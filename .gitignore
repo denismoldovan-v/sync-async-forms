@@ -1,0 +1,47 @@
+#  Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+*.egg
+*.egg-info/
+dist/
+build/
+*.log
+
+#  Virtualenv
+venv/
+env/
+ENV/
+.venv/
+.Python
+
+#  PostgreSQL dumpy (jeśli zrobisz)
+*.sql
+
+#  Secrets / tokens
+.env
+*.env
+
+#  loader.io
+loaderio-*.txt
+
+#  IDE / systemowe śmieci
+*.swp
+.DS_Store
+.vscode/
+.idea/
+*.bak
+*.tmp
+
+#  Deployment / uwsgi
+*.pid
+*.sock
+*.db
+
+#  Testy / coverage
+htmlcov/
+.coverage
+.tox/
+.pytest_cache/
+.cache/
