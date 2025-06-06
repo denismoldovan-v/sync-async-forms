@@ -36,6 +36,10 @@ def create_async():
         return {"status": "ok", "message": "Task queued"}, 202
     return render_template("create_async.html")
 
+@app.route('/loaderio-1cce1e84eaa35557ea6fe6171d28f44c.html')
+def loaderio_verification():
+    return "loaderio-1cce1e84eaa35557ea6fe6171d28f44c"
+
 if __name__ == "__main__":
     with app.app_context():
         db.create_all()
