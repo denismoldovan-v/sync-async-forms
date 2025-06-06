@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block title %}Messages{% endblock %}
+{% block content %}
+<h2 class="mb-4">All Messages</h2>
+<div class="row">
+    {% for m in messages %}
+    <div class="col-md-6">
+        <div class="card mb-3 shadow-sm">
+            <div class="card-body">
+                <h5 class="card-title">{{ m.title }}</h5>
+                <p class="card-text">{{ m.content }}</p>
+            </div>
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}

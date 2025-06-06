@@ -1,0 +1,42 @@
+from flask import render_template, request, url_for, flash, redirect, Flask
+from app import app, db
+from models import Message
+from async_tasks import save_message_async
+
+@app.route("/")
+def home():
+    all_messages = Message.query.all()
+    return render_template("index.html", messages=all_messages)
+
+@app.route('/create/', methods=('GET', 'POST'))
+def create():
+    if request.method == 'POST':
+        title = request.form['title']
+        content = request.form['content']
+        if not title:
+            flash('Title is required!')
+        elif not content:
+            flash('Content is required!')
+        else:
+            new_message = Message(title=title, content=content)
+            db.session.add(new_message)
+            db.session.commit()
+            return redirect(url_for('home'))
+    return render_template('create.html')
+
+@app.route("/create-async/", methods=["GET", "POST"])
+def create_async():
+    if request.method == "POST":
+        data = request.get_json()
+        title = data.get("title")
+        content = data.get("content")
+        if not title or not content:
+            return {"status": "error", "message": "Missing fields"}, 400
+        save_message_async.delay(title, content)
+        return {"status": "ok", "message": "Task queued"}, 202
+    return render_template("create_async.html")
+
+if __name__ == "__main__":
+    with app.app_context():
+        db.create_all()
+    app.run(debug=True, host="0.0.0.0", port=8888)

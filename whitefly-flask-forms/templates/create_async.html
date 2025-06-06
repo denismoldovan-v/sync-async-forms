@@ -1,0 +1,46 @@
+﻿{% extends 'base.html' %}
+
+{% block content %}
+<h1>Add a New Message (Async)</h1>
+
+<form id="asyncForm">
+    <div class="mb-3">
+        <label for="title" class="form-label">Title</label>
+        <input type="text" id="title" class="form-control" required>
+    </div>
+    <div class="mb-3">
+        <label for="content" class="form-label">Content</label>
+        <textarea id="content" class="form-control" rows="5" required></textarea>
+    </div>
+    <button type="submit" class="btn btn-primary">Submit</button>
+</form>
+
+<script>
+    document.getElementById("asyncForm").addEventListener("submit", function (e) {
+        e.preventDefault();
+        fetch("/create-async/", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                title: document.getElementById("title").value,
+                content: document.getElementById("content").value
+            })
+        })
+            .then(response => {
+                if (!response.ok) throw new Error("Błąd");
+                return response.json();
+            })
+            .then(data => {
+                // Czyść formularz
+                document.getElementById("title").value = "";
+                document.getElementById("content").value = "";
+
+                sessionStorage.setItem("messageQueued", "Wiadomość została dodana do kolejki.");
+                window.location.href = "/";
+            })
+            .catch(error => {
+                alert("Wystąpił błąd: " + error.message);
+            });
+    });
+</script>
+{% endblock %}

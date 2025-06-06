@@ -1,0 +1,42 @@
+﻿{% extends "base.html" %}
+{% block title %}Create Async{% endblock %}
+{% block content %}
+<h2 class="mb-4">Add Message (Async)</h2>
+<form id="asyncForm" class="card p-4 shadow-sm bg-white">
+    <div class="mb-3">
+        <label class="form-label">Title</label>
+        <input type="text" id="title" class="form-control" required>
+    </div>
+    <div class="mb-3">
+        <label class="form-label">Content</label>
+        <textarea id="content" class="form-control" required></textarea>
+    </div>
+    <button type="submit" class="btn btn-success">Submit</button>
+</form>
+
+<script>
+document.getElementById("asyncForm").addEventListener("submit", function(e) {
+    e.preventDefault();
+
+    const titleInput = document.getElementById("title");
+    const contentInput = document.getElementById("content");
+
+    fetch("/create-async", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+            title: titleInput.value,
+            content: contentInput.value
+        })
+    })
+    .then(res => res.json())
+    .then(data => {
+        alert(data.message);
+        titleInput.value = "";
+        contentInput.value = "";
+        window.location.href = "/";
+    });
+});
+</script>
+
+{% endblock %}

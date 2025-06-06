@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block title %}Create{% endblock %}
+{% block content %}
+<h2 class="mb-4">Add Message (Sync)</h2>
+<form method="post" class="card p-4 shadow-sm bg-white">
+    <div class="mb-3">
+        <label class="form-label">Title</label>
+        <input type="text" name="title" class="form-control" required>
+    </div>
+    <div class="mb-3">
+        <label class="form-label">Content</label>
+        <textarea name="content" class="form-control" required></textarea>
+    </div>
+    <button type="submit" class="btn btn-primary">Submit</button>
+</form>
+{% endblock %}
