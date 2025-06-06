@@ -45,3 +45,6 @@ htmlcov/
 .tox/
 .pytest_cache/
 .cache/
+
+.vs/
+
