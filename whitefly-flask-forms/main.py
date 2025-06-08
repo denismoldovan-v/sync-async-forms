@@ -8,7 +8,8 @@ def home():
     all_messages = Message.query.all()
     return render_template("index.html", messages=all_messages)
 
-@app.route('/create/', methods=('GET', 'POST'))
+@app.route("/flask_uwsgi_nginx/create", methods=["GET", "POST"])
+@app.route("/flask_asgi_nginx/create", methods=["GET", "POST"])
 def create():
     if request.method == 'POST':
         if request.is_json:
@@ -32,7 +33,8 @@ def create():
     return render_template('create.html')
 
 
-@app.route("/create-async/", methods=["GET", "POST"])
+@app.route("/flask_uwsgi_nginx/create-async", methods=["GET", "POST"])
+@app.route("/flask_asgi_nginx/create-async", methods=["GET", "POST"])
 def create_async():
     if request.method == "POST":
         if not request.is_json:
