@@ -1,15 +1,16 @@
 from flask import render_template, request, url_for, flash, redirect, Flask
 from app import app, db
 from models import Message
-from async_tasks import save_message_async
+
 
 @app.route("/")
 def home():
     all_messages = Message.query.all()
     return render_template("index.html", messages=all_messages)
 
-@app.route('/create/', methods=('GET', 'POST'))
+@app.route("/create", methods=["GET", "POST"])
 def create():
+    print(">>> FLASK: inside /create route")
     if request.method == 'POST':
         if request.is_json:
             data = request.get_json()
@@ -32,8 +33,9 @@ def create():
     return render_template('create.html')
 
 
-@app.route("/create-async/", methods=["GET", "POST"])
+@app.route("/create-async", methods=["GET", "POST"])
 def create_async():
+    from async_tasks import save_message_async
     if request.method == "POST":
         if not request.is_json:
             return {"status": "error", "message": "Content-Type must be application/json"}, 400
@@ -56,6 +58,13 @@ def create_async():
 @app.route('/loaderio-1cce1e84eaa35557ea6fe6171d28f44c.html')
 def loaderio_verification():
     return "loaderio-1cce1e84eaa35557ea6fe6171d28f44c"
+
+@app.errorhandler(Exception)
+def handle_exception(e):
+    import traceback
+    traceback.print_exc()
+    return f"Internal Error: {str(e)}", 500
+
 
 if __name__ == "__main__":
     with app.app_context():

@@ -1,21 +1,20 @@
+# celery_worker.py
 from celery import Celery
-from app import app
 
-def make_celery(app):
-    celery = Celery(
-        app.import_name,
-        broker='redis://localhost:6379/0',
-        backend='redis://localhost:6379/0'
-    )
+celery = Celery(
+    "whitefly",
+    broker="redis://localhost:6379/0",
+    backend="redis://localhost:6379/0"
+)
+
+def init_celery(app):
     celery.conf.update(app.config)
-    TaskBase = celery.Task
 
-    class ContextTask(TaskBase):
+    class ContextTask(celery.Task):
         def __call__(self, *args, **kwargs):
             with app.app_context():
-                return TaskBase.__call__(self, *args, **kwargs)
+                return super().__call__(*args, **kwargs)
 
     celery.Task = ContextTask
-    return celery
 
-celery = make_celery(app)
+import async_tasks
