@@ -18,7 +18,7 @@
 <script>
     document.getElementById("asyncForm").addEventListener("submit", function (e) {
         e.preventDefault();
-        fetch("/create-async/", {
+        fetch(window.location.pathname, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
@@ -26,21 +26,19 @@
                 content: document.getElementById("content").value
             })
         })
-            .then(response => {
-                if (!response.ok) throw new Error("Błąd");
-                return response.json();
-            })
-            .then(data => {
-                // Czyść formularz
-                document.getElementById("title").value = "";
-                document.getElementById("content").value = "";
-
-                sessionStorage.setItem("messageQueued", "Wiadomość została dodana do kolejki.");
-                window.location.href = "/";
-            })
-            .catch(error => {
-                alert("Wystąpił błąd: " + error.message);
-            });
+        .then(response => {
+            if (!response.ok) throw new Error("Błąd");
+            return response.json();
+        })
+        .then(data => {
+            document.getElementById("title").value = "";
+            document.getElementById("content").value = "";
+            alert("Wiadomość została dodana do kolejki.");
+        })
+        .catch(error => {
+            alert("Wystąpił błąd: " + error.message);
+        });
     });
 </script>
+
 {% endblock %}

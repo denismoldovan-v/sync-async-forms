@@ -1,7 +1,7 @@
 from flask import render_template, request, url_for, flash, redirect, Flask
 from app import app, db
 from models import Message
-
+import sys
 
 @app.route("/")
 def home():
@@ -36,6 +36,9 @@ def create():
 @app.route("/create-async", methods=["GET", "POST"])
 def create_async():
     from async_tasks import save_message_async
+    print(">>> INSIDE /create-async")
+    print(">>> environ SCRIPT_NAME:", request.environ.get("SCRIPT_NAME"))
+    sys.stdout.flush()
     if request.method == "POST":
         if not request.is_json:
             return {"status": "error", "message": "Content-Type must be application/json"}, 400

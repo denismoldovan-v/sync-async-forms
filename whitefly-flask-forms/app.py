@@ -5,7 +5,7 @@ import os
 # === 1. Inicjalizacja aplikacji ===
 app = Flask(__name__)
 app.config['SECRET_KEY'] = '491f66ea21948906630a977ff223b779279917cfb8b84d3'
-app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://whitefly_user:whitefly_pass@localhost/whitefly_db'
+app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://whitefly_user:whitefly_pass@localhost/whitefly_flask'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config["DEBUG"] = True
 
