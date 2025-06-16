@@ -9,9 +9,9 @@
     <nav class="navbar navbar-expand-lg navbar-dark bg-dark px-3">
         <a class="navbar-brand" href="/">FastAPI</a>
         <div class="navbar-nav">
-            <a class="nav-link" href="/">Home</a>
-            <a class="nav-link" href="/create">Create</a>
-            <a class="nav-link" href="/create-async">Async</a>
+            <a class="nav-link" href="{{ request.scope.get('root_path', '') }}/">Home</a>
+            <a class="nav-link" href="{{ request.scope.get('root_path', '') }}/create">Create</a>
+            <a class="nav-link" href="{{ request.scope.get('root_path', '') }}/create-async">Async</a>
         </div>
     </nav>
 
