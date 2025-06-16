@@ -1,4 +1,4 @@
-from fastapi import FastAPI, Request, Form
+from fastapi import FastAPI, Request, Form, Body
 from fastapi.responses import HTMLResponse, JSONResponse, RedirectResponse
 from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
@@ -6,6 +6,7 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from models import Base, Message
 from celery import Celery
+from starlette.datastructures import FormData
 
 app = FastAPI(root_path="/fastapi_asgi_nginx")
 templates = Jinja2Templates(directory="templates")
@@ -49,9 +50,26 @@ def create_async_form(request: Request):
     return templates.TemplateResponse("create_async.html", {"request": request})
 
 @app.post("/create-async")
-async def create_async_api(title: str = Form(...), content: str = Form(...)):
+async def create_async_api(
+    request: Request,
+    title: str = Form(None),
+    content: str = Form(None),
+    json_body: dict = Body(None)
+):
+    root = request.scope.get("root_path", "")
+
+    if request.headers.get("content-type", "").startswith("application/json"):
+        if not json_body or "title" not in json_body or "content" not in json_body:
+            return JSONResponse(status_code=400, content={"message": "Missing fields"})
+
+        celery.send_task("celery_worker.save_message_async", args=[json_body["title"], json_body["content"]])
+        return JSONResponse(status_code=202, content={"message": "Task queued"})
+
     if not title or not content:
-        return JSONResponse(status_code=400, content={"message": "Missing fields"})
-    
+        return templates.TemplateResponse("create_async.html", {
+            "request": request,
+            "error": "Missing title or content."
+        })
+
     celery.send_task("celery_worker.save_message_async", args=[title, content])
-    return JSONResponse(status_code=202, content={"message": "Task queued"})
+    return RedirectResponse(url=root + "/", status_code=303)
