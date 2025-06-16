@@ -7,7 +7,7 @@ from sqlalchemy.orm import sessionmaker
 from models import Base, Message
 from celery import Celery
 
-app = FastAPI()
+app = FastAPI(root_path="/fastapi_asgi_nginx")
 templates = Jinja2Templates(directory="templates")
 
 # SQLAlchemy
