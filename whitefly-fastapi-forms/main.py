@@ -41,7 +41,7 @@ def create(title: str = Form(...), content: str = Form(...)):
     db.add(new_msg)
     db.commit()
     db.close()
-    return RedirectResponse("{{ request.scope.get('root_path', '') }}/", status_code=303)
+    return RedirectResponse("base.html", status_code=303)
 
 @app.get("/create-async", response_class=HTMLResponse)
 def create_async_form(request: Request):
