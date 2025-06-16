@@ -41,17 +41,17 @@ def create(title: str = Form(...), content: str = Form(...)):
     db.add(new_msg)
     db.commit()
     db.close()
-    return RedirectResponse("base.html", status_code=303)
+    return RedirectResponse(url=request.scope.get('root_path', '') + "/", status_code=303)
+
 
 @app.get("/create-async", response_class=HTMLResponse)
 def create_async_form(request: Request):
     return templates.TemplateResponse("create_async.html", {"request": request})
 
 @app.post("/create-async")
-async def create_async_api(data: dict):
-    title = data.get("title")
-    content = data.get("content")
+async def create_async_api(title: str = Form(...), content: str = Form(...)):
     if not title or not content:
         return JSONResponse(status_code=400, content={"message": "Missing fields"})
+    
     celery.send_task("celery_worker.save_message_async", args=[title, content])
     return JSONResponse(status_code=202, content={"message": "Task queued"})
