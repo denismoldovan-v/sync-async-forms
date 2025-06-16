@@ -35,7 +35,7 @@ def create_form(request: Request):
     return templates.TemplateResponse("create.html", {"request": request})
 
 @app.post("/create")
-def create(title: str = Form(...), content: str = Form(...)):
+def create(request: Request, title: str = Form(...), content: str = Form(...)):
     db = SessionLocal()
     new_msg = Message(title=title, content=content)
     db.add(new_msg)
