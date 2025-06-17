@@ -16,8 +16,11 @@
 
 <script>
     const rootPath = "{{ request.scope.get('root_path','') }}";
-    document.getElementById("asyncForm").addEventListener("submit", function(e) {
+    document.getElementById("asyncForm").addEventListener("submit", function (e) {
         e.preventDefault();
+
+        const submitBtn = document.querySelector("button[type='submit']");
+        submitBtn.disabled = true; 
 
         const titleInput = document.getElementById("title");
         const contentInput = document.getElementById("content");
@@ -30,13 +33,15 @@
                 content: contentInput.value
             })
         })
-        .then(res => res.json())
-        .then(data => {
-            alert(data.message);
-            titleInput.value = "";
-            contentInput.value = "";
-            window.location.href = rootPath + "/";
-        });
+            .then(res => res.json())
+            .then(data => {
+                alert(data.message);
+                window.location.href = rootPath + "/";
+            })
+            .catch(err => {
+                alert("Błąd przy zapisie");
+                submitBtn.disabled = false; 
+            });
     });
 </script>
 
