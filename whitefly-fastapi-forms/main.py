@@ -71,5 +71,5 @@ async def create_async_api(request: Request):
         return JSONResponse(status_code=400, content={"message": "Missing fields"})
 
     print(f" Queuing message: title={title}, content={content}")
-    celery.send_task("celery_worker.save_message_async", args=[title, content])
+    celery.send_task("save_message_async", args=[title, content])
     return JSONResponse(status_code=202, content={"message": "Task queued"})
