@@ -22,7 +22,7 @@
         const titleInput = document.getElementById("title");
         const contentInput = document.getElementById("content");
 
-        fetch("/create-async", {
+        fetch(rootPath + "/create-async", {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
