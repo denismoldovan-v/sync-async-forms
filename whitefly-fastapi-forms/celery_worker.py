@@ -3,6 +3,10 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from celery import Celery
 
+
+print(" Celery u?ywa DB:", engine.url)
+
+
 celery = Celery("worker",
     broker="redis://localhost:6379/0",
     backend="redis://localhost:6379/0"

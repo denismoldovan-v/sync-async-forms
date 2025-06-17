@@ -26,6 +26,7 @@ celery = Celery(
 
 @app.get("/", response_class=HTMLResponse)
 def read_root(request: Request):
+    print("FastAPI u?ywa DB:", engine.url)
     db = SessionLocal()
     messages = db.query(Message).all()
     db.close()
