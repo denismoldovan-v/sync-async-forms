@@ -8,7 +8,7 @@ celery = Celery("worker",
     backend="redis://localhost:6379/0"
 )
 
-@celery.task(name="celery_worker.save_message_async")
+@celery.task(name="save_message_async")
 def save_message_async(title, content):
     try:
         DATABASE_URL = "postgresql://whitefly_user:whitefly_pass@localhost/whitefly_fastapi"
