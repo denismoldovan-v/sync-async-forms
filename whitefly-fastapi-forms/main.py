@@ -30,6 +30,9 @@ def read_root(request: Request):
     print("FastAPI u?ywa DB:", engine.url)
     db = SessionLocal()
     messages = db.query(Message).all()
+    import os
+    print(" FASTAPI path:", os.getcwd()) 
+    print(" ENGINE URL:", engine.url)
     db.close()
     return templates.TemplateResponse("index.html", {"request": request, "messages": messages})
 

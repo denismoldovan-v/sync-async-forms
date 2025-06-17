@@ -13,10 +13,13 @@ celery = Celery("worker",
 
 @celery.task(name="save_message_async")
 def save_message_async(title, content):
+    
     try:
         DATABASE_URL = "postgresql://whitefly_user:whitefly_pass@localhost/whitefly_fastapi"
         engine = create_engine(DATABASE_URL, echo=True)
-        
+        import os
+        print(" PYTHONPATH:", os.getcwd())
+        print("ENGINE URL:", engine.url)
         print(" Celery u?ywa DB:", engine.url)
         SessionLocal = sessionmaker(bind=engine, expire_on_commit=False)
         Base.metadata.create_all(bind=engine)
