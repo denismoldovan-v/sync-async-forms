@@ -20,6 +20,7 @@ def save_message_async(title, content):
         db = SessionLocal()
         new_msg = Message(title=title, content=content)
         db.add(new_msg)
+        db.flush()
         db.commit()
         db.close()
         print("Message saved.")
