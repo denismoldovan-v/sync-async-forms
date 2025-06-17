@@ -50,25 +50,26 @@ def create_async_form(request: Request):
     return templates.TemplateResponse("create_async.html", {"request": request})
 
 @app.post("/create-async")
-async def create_async_api(
-    request: Request,
-    title: str = Form(None),
-    content: str = Form(None),
-    json_body: dict = Body(None)
-):
-    root = request.scope.get("root_path", "")
+async def create_async_api(request: Request):
+    print("=== [CREATE-ASYNC] ===")
+    print("HEADERS:", dict(request.headers))
 
-    # JSON (np. z JS lub Loader.io)
-    if request.headers.get("content-type", "").startswith("application/json"):
-        if not json_body or "title" not in json_body or "content" not in json_body:
-            return JSONResponse(status_code=400, content={"message": "Missing fields"})
+    try:
+        body_bytes = await request.body()
+        print("RAW BODY:", body_bytes)
+        data = await request.json()
+        print("JSON PARSED:", data)
+    except Exception as e:
+        print("JSON PARSE ERROR:", str(e))
+        return JSONResponse(status_code=400, content={"message": "Invalid JSON"})
 
-        celery.send_task("celery_worker.save_message_async", args=[json_body["title"], json_body["content"]])
-        return JSONResponse(status_code=202, content={"message": "Task queued"})
+    title = data.get("title")
+    content = data.get("content")
 
-    # Formularz HTML (FormData)
     if not title or not content:
-        return JSONResponse(status_code=400, content={"message": "Missing fields (form)."})
+        print("Missing fields in JSON")
+        return JSONResponse(status_code=400, content={"message": "Missing fields"})
 
+    print(f" Queuing message: title={title}, content={content}")
     celery.send_task("celery_worker.save_message_async", args=[title, content])
-    return RedirectResponse(url=root + "/", status_code=303)
+    return JSONResponse(status_code=202, content={"message": "Task queued"})
