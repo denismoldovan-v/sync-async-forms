@@ -6,6 +6,7 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from models import Base, Message
 from celery import Celery
+from celery_worker import save_message_async
 from starlette.datastructures import FormData
 
 app = FastAPI(root_path="/fastapi_asgi_nginx")
@@ -72,5 +73,5 @@ async def create_async_api(request: Request):
         return JSONResponse(status_code=400, content={"message": "Missing fields"})
 
     print(f" Queuing message: title={title}, content={content}")
-    celery.send_task("save_message_async", args=[title, content])
+    save_message_async.delay(title, content)
     return JSONResponse(status_code=202, content={"message": "Task queued"})
