@@ -18,7 +18,7 @@ def save_message_async(title, content):
         engine = create_engine(DATABASE_URL, echo=True)
         
         print(" Celery u?ywa DB:", engine.url)
-        SessionLocal = sessionmaker(bind=engine)
+        SessionLocal = sessionmaker(bind=engine, expire_on_commit=False)
         Base.metadata.create_all(bind=engine)
 
         db = SessionLocal()
