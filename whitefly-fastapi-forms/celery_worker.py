@@ -12,7 +12,7 @@ celery = Celery("worker",
 def save_message_async(title, content):
     try:
         DATABASE_URL = "postgresql://whitefly_user:whitefly_pass@localhost/whitefly_fastapi"
-        engine = create_engine(DATABASE_URL)
+        engine = create_engine(DATABASE_URL, echo=True)
 
         SessionLocal = sessionmaker(bind=engine)
         Base.metadata.create_all(bind=engine)
